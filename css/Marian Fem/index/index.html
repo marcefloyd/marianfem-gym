@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARIAN FEM Training - Entrena tu mejor versión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="./js/index.js"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between">
+
+    <!-- NAVBAR / ENCABEZADO -->
+    <header class="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-pink-600 text-white font-black px-3 py-1.5 rounded-xl text-lg tracking-wider">MF</div>
+                <span class="font-bold text-white tracking-tight text-lg">MARIAN FEM <span class="text-pink-500 font-light">Training</span></span>
+            </div>
+            
+           <!-- Navegación condicional (Estado de usuario) -->
+            <div class="flex items-center space-x-4 text-sm font-medium">
+                <a href="#planes" class="text-zinc-400 hover:text-white transition hidden sm:inline">Planes y Valores</a>
+                <a href="#horarios" class="text-zinc-400 hover:text-white transition hidden sm:inline">Cronograma</a>
+                
+                <!-- Si el usuario NO ha iniciado sesión, se muestran estos botones -->
+                <div id="auth-buttons" class="flex items-center space-x-2">
+                    <a href="../admin/admin-login.html" class="px-4 py-2 rounded-xl text-zinc-300 hover:text-white transition text-xs font-semibold inline-block">Iniciar sesión</a>
+                    <a href="../admin/registro.html" class="bg-pink-600 hover:bg-pink-500 text-white px-4 py-2 rounded-xl text-xs font-semibold transition shadow-sm inline-block text-center">Registrarse</a>
+                </div>
+
+                <!-- Perfil de usuario (Aparece cuando ya ingresaron, oculto por defecto con 'hidden') -->
+                <div id="user-profile" class="hidden items-center space-x-3 bg-zinc-800 px-3 py-1.5 rounded-full border border-zinc-700">
+                    <span class="bg-pink-600 text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center">CN</span>
+                    <div class="text-left hidden md:block">
+                        <p class="text-xs font-bold text-white leading-none">CAMILA NEGELI</p>
+                        <p class="text-[10px] text-pink-400">4 Créditos disponibles</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-12 flex-1 w-full">
+        
+        <!-- HERO / BANNER PRINCIPAL ESTUDIO -->
+        <section class="relative bg-zinc-900 border border-zinc-800 rounded-3xl p-8 md:p-12 overflow-hidden flex flex-col md:flex-row justify-between items-center gap-8 shadow-xl">
+            <div class="space-y-4 max-w-xl">
+                <span class="bg-pink-500/10 text-pink-400 text-xs font-bold px-3 py-1 rounded-full border border-pink-500/20 uppercase tracking-widest">Octubre 2026</span>
+                <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white">TU MEJOR VERSIÓN, TU MEJOR HÁBITO.</h1>
+                <p class="text-zinc-400 text-sm md:text-base">En MARIAN FEM, el movimiento, la fuerza y el bienestar se convierten en una experiencia única. Entrena tu cuerpo, fortalece tu mente y transforma tu vida.</p>
+                <div class="pt-2 flex gap-3">
+                    <a href="#horarios" class="bg-pink-600 hover:bg-pink-500 text-white px-6 py-3 rounded-xl font-bold text-sm transition shadow-lg shadow-pink-600/20">Reservar Turno</a>
+                    <a href="#planes" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-6 py-3 rounded-xl font-bold text-sm transition">Ver Tarifas</a>
+                </div>
+            </div>
+            <div class="bg-pink-600/20 border border-pink-500/30 p-6 rounded-2xl text-center space-y-2 w-full md:w-80">
+                <p class="text-xs text-pink-400 font-semibold uppercase">📍 Ubicación del Estudio</p>
+                <p class="text-sm font-bold text-white">Tu Caba, Tu Comunidad, El Cambio.</p>
+                <p class="text-xs text-zinc-400">WhatsApp: +54 9 11 ...</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE VALORES MENSUALES (Octubre) -->
+        <section id="planes" class="space-y-6">
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">VALORES MENSUALES</h2>
+                <p class="text-xs text-pink-500 uppercase font-semibold tracking-widest">Mes de Octubre</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Funcional -->
+                <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl space-y-4 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <span class="text-xs font-bold text-pink-500 uppercase">Disciplinas</span>
+                        <h3 class="text-xl font-black text-white">FUNCIONAL</h3>
+                    </div>
+                    <div class="space-y-2 border-t border-zinc-800 pt-4 text-sm">
+                        <div class="flex justify-between items-center text-zinc-400"><span>2 veces por semana</span> <strong class="text-white font-bold">$35.000</strong></div>
+                        <div class="flex justify-between items-center text-zinc-400"><span>3 veces por semana</span> <strong class="text-white font-bold">$40.000</strong></div>
+                    </div>
+                </div>
+
+                <!-- Jumping Full -->
+                <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl space-y-4 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <span class="text-xs font-bold text-pink-500 uppercase">Cardio & Jump</span>
+                        <h3 class="text-xl font-black text-white">JUMPING FULL</h3>
+                    </div>
+                    <div class="border-t border-zinc-800 pt-4">
+                        <p class="text-2xl font-black text-pink-500">$39.000</p>
+                        <p class="text-xs text-zinc-400 mt-1">Acceso libre a clases de jumping</p>
+                    </div>
+                </div>
+
+                <!-- Promo Full -->
+                <div class="bg-gradient-to-b from-zinc-900 to-pink-950/40 border border-pink-500/30 p-6 rounded-2xl space-y-4 flex flex-col justify-between shadow-lg">
+                    <div class="space-y-2">
+                        <span class="bg-pink-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase">Recomendado</span>
+                        <h3 class="text-xl font-black text-white">PROMO FULL</h3>
+                        <p class="text-xs text-zinc-300">¡Todas las veces que quieras! (Los dos turnos: Funcional + Jumping)</p>
+                    </div>
+                    <div class="border-t border-zinc-800/80 pt-4">
+                        <p class="text-2xl font-black text-pink-400">$47.000</p>
+                    </div>
+                </div>
+
+                <!-- Promo Balance MF -->
+                <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl space-y-4 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <span class="text-xs font-bold text-pink-500 uppercase">Bienestar Integral</span>
+                        <h3 class="text-xl font-black text-white">PROMO BALANCE MF</h3>
+                        <p class="text-xs text-zinc-400">Gym ilimitado + 1 consulta nutricional mensual</p>
+                    </div>
+                    <div class="border-t border-zinc-800 pt-4">
+                        <p class="text-2xl font-black text-pink-500">$58.500</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CRONOGRAMA DE HORARIOS -->
+        <section id="horarios" class="space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-black text-white tracking-tight">CRONOGRAMA DE HORARIOS</h2>
+                    <p class="text-xs text-zinc-400">Selecciona tu clase y asegura tu lugar</p>
+                </div>
+                <!-- Filtros de días rápidos -->
+                <div class="flex gap-1 bg-zinc-900 p-1.5 rounded-xl border border-zinc-800 text-xs">
+                    <button class="px-3 py-1.5 rounded-lg bg-pink-600 text-white font-semibold">Lunes</button>
+                    <button class="px-3 py-1.5 rounded-lg hover:bg-zinc-800 text-zinc-300 transition">Martes</button>
+                    <button class="px-3 py-1.5 rounded-lg hover:bg-zinc-800 text-zinc-300 transition">Miércoles</button>
+                    <button class="px-3 py-1.5 rounded-lg hover:bg-zinc-800 text-zinc-300 transition">Jueves</button>
+                    <button class="px-3 py-1.5 rounded-lg hover:bg-zinc-800 text-zinc-300 transition">Viernes</button>
+                </div>
+            </div>
+
+            <!-- Grilla de Clases Disponibles (Conectada a Supabase) -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="grilla-clases-publicas">
+                    <!-- Tarjeta de ejemplo 1 -->
+                    <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-xl space-y-3 flex flex-col justify-between">
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20">08:00 Hs</span>
+                                <span class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded">6 lugares</span>
+                            </div>
+                            <h4 class="text-base font-bold text-white pt-1">FUNCIONAL</h4>
+                            <p class="text-xs text-zinc-400">Lunes a Viernes • Turno Mañana</p>
+                        </div>
+                        <button onclick="reservarTurnoClase('Funcional 08:00')" class="w-full bg-pink-600 hover:bg-pink-500 text-white font-semibold py-2 rounded-xl text-xs transition shadow-sm">
+                            Reservar Turno
+                        </button>
+                    </div>
+
+                    <!-- Tarjeta de ejemplo 2 -->
+                    <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-xl space-y-3 flex flex-col justify-between">
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20">18:10 Hs</span>
+                                <span class="text-xs text-pink-400 font-semibold bg-pink-500/10 px-2 py-0.5 rounded border border-pink-500/20">Llena</span>
+                            </div>
+                            <h4 class="text-base font-bold text-white pt-1">MF INTENSO</h4>
+                            <p class="text-xs text-zinc-400">Martes y Jueves • Turno Tarde</p>
+                        </div>
+                        <button disabled class="w-full bg-zinc-800 text-zinc-500 font-semibold py-2 rounded-xl text-xs cursor-not-allowed">
+                            Cupo Completo
+                        </button>
+                    </div>
+
+                    <!-- Tarjeta de ejemplo 3 -->
+                    <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-xl space-y-3 flex flex-col justify-between">
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-start">
+                                <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20">20:40 Hs</span>
+                                <span class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded">3 lugares</span>
+                            </div>
+                            <h4 class="text-base font-bold text-white pt-1">JUMPING</h4>
+                            <p class="text-xs text-zinc-400">Lunes, Miércoles y Viernes</p>
+                        </div>
+                        <button onclick="reservarTurnoClase('Jumping 20:40')" class="w-full bg-pink-600 hover:bg-pink-500 text-white font-semibold py-2 rounded-xl text-xs transition shadow-sm">
+                            Reservar Turno
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER / PIE DE PÁGINA -->
+    <footer class="bg-zinc-900 border-t border-zinc-800 mt-16 py-8 text-center text-xs text-zinc-500 space-y-2">
+        <p class="text-zinc-400 font-bold">MARIAN FEM TRAINING — Entrená tu cuerpo, fortalecé tu mente.</p>
+        <p>Nutrición (Sábados) • Counseling (Según disponibilidad)</p>
+        <p class="pt-2">Sitio web integrado con Supabase</p>
+    </footer>
+    <!-- SCRIPT DE INTERACTIVIDAD BÁSICA -->
+    <script type="module" src="index.js"></script>
+</body>
+</html>

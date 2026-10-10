@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Panel - Marian Fem Training</title>
+    <!-- Tailwind CSS por CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col">
+
+    <!-- Barra Superior / Navegación -->
+    <header class="border-b border-zinc-800 bg-zinc-950/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="bg-pink-600 text-white font-bold px-3 py-1.5 rounded-xl text-sm">MF</span>
+                <span class="font-bold text-white tracking-tight">Panel de Clienta</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="user-email" class="text-xs text-zinc-400 hidden sm:inline"></span>
+                <button onclick="cerrarSesion()" class="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-semibold transition">
+                    Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-6 py-8">
+        
+        <!-- Bienvenida -->
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-white tracking-tight">¡Hola de nuevo! 👋</h1>
+            <p class="text-sm text-zinc-400 mt-1">Explora las clases disponibles de esta semana y reserva tu lugar en Marian Fem.</p>
+        </div>
+
+        <!-- Sección de Clases Disponibles para Reservar -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
+            <h2 class="text-lg font-bold text-white mb-4">Clases y Turnos Disponibles</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-zinc-800 text-xs text-zinc-400 uppercase tracking-wider">
+                            <th class="py-3 px-3">Horario</th>
+                            <th class="py-3 px-3">Disciplina</th>
+                            <th class="py-3 px-3">Cupos</th>
+                            <th class="py-3 px-3 text-right">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-clases-cliente" class="divide-y divide-zinc-800/60 text-sm">
+                        <!-- Las clases se cargarán dinámicamente desde Supabase -->
+                        <tr>
+                            <td colspan="4" class="py-6 text-center text-zinc-500">Cargando clases disponibles...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Lógica de Supabase para la Clienta -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+        const SUPABASE_URL = 'https://ciorlilsipudyqhuzxzh.supabase.co'
+        const SUPABASE_ANON_KEY = 'sb_publishable_VFhlc6La51QGJT-_qVu19Q_6hqlXWof'
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+        const tablaClases = document.getElementById('tabla-clases-cliente')
+        const userEmailSpan = document.getElementById('user-email')
+
+        // 1. Validar que la usuaria haya iniciado sesión
+        async function verificarSesion() {
+            const { data: { session }, error } = await supabase.auth.getSession()
+            if (!session || error) {
+                window.location.href = 'admin-login.html' // Redirige al login si no hay sesión
+            } else {
+                userEmailSpan.textContent = session.user.email;
+                cargarClases();
+            }
+        }
+
+        verificarSesion()
+
+        // 2. Función global para cerrar sesión
+        window.cerrarSesion = async function() {
+            await supabase.auth.signOut()
+            window.location.href = 'admin-login.html'
+        }
+
+        // 3. Cargar las clases de la base de datos
+        async function cargarClases() {
+            try {
+                const { data, error } = await supabase
+                    .from('gimnasio_clases')
+                    .select('*')
+                    .order('horario', { ascending: true })
+
+                if (error) throw error
+
+                renderizarTabla(data)
+            } catch (err) {
+                console.error("Error al cargar clases:", err.message)
+                tablaClases.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-pink-500">Error al conectar con la base de datos.</td></tr>`
+            }
+        }
+
+        // 4. Renderizar las clases en la tabla del cliente
+        function renderizarTabla(clases) {
+            tablaClases.innerHTML = ""
+
+            if (!clases || clases.length === 0) {
+                tablaClases.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-zinc-500">No hay clases programadas en este momento.</td></tr>`
+                return
+            }
+
+            clases.forEach((clase) => {
+                const tr = document.createElement('tr')
+                tr.className = "hover:bg-zinc-800/50 transition"
+
+                const tdHora = document.createElement('td')
+                tdHora.className = "py-3 px-3 font-bold text-white"
+                tdHora.textContent = clase.horario
+
+                const tdDisc = document.createElement('td')
+                tdDisc.className = "py-3 px-3 text-zinc-300"
+                tdDisc.innerHTML = `${clase.nombre}<br><span class="text-xs text-pink-500 font-normal">${clase.categoria || 'Entrenamiento'}</span>`
+
+                const tdCupos = document.createElement('td')
+                tdCupos.className = "py-3 px-3"
+                const span = document.createElement('span')
+                const libres = clase.totales - clase.ocupados
+
+                if (libres <= 0) {
+                    span.className = "bg-pink-500/10 text-pink-400 text-xs px-2.5 py-1 rounded-full font-semibold border border-pink-500/20"
+                    span.textContent = "Completa"
+                } else {
+                    span.className = "bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-1 rounded-full font-semibold border border-emerald-500/20"
+                    span.textContent = `${libres} lugares libres`
+                }
+                tdCupos.appendChild(span)
+
+                const tdAccion = document.createElement('td')
+                tdAccion.className = "py-3 px-3 text-right"
+                const btn = document.createElement('button')
+                
+                if (libres <= 0) {
+                    btn.className = "text-xs bg-zinc-800 text-zinc-500 px-3 py-1.5 rounded-lg font-semibold cursor-not-allowed"
+                    btn.textContent = "Sin cupo"
+                    btn.disabled = true
+                } else {
+                    btn.className = "text-xs bg-pink-600 hover:bg-pink-500 px-3 py-1.5 rounded-lg text-white font-semibold transition shadow-sm"
+                    btn.textContent = "Reservar Turno"
+                    btn.onclick = () => alert(`¡Turno reservado con éxito para ${clase.nombre} a las ${clase.horario}!`)
+                }
+
+                tdAccion.appendChild(btn)
+
+                tr.appendChild(tdHora)
+                tr.appendChild(tdDisc)
+                tr.appendChild(tdCupos)
+                tr.appendChild(tdAccion)
+
+                tablaClases.appendChild(tr)
+            })
+        }
+    </script>
+</body>
+</html>
