@@ -11,15 +11,19 @@
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex">
 
     <!-- MENÚ LATERAL / SIDEBAR -->
-    <aside class="w-72 bg-zinc-900 border-r border-zinc-800 hidden md:flex flex-col justify-between">
+    <aside id="sidebar-movil" class="fixed inset-y-0 left-0 z-50 w-72 bg-zinc-900 border-r border-zinc-800 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col justify-between shadow-2xl">
         <div>
             <!-- Logo / Título Marian Fem -->
-            <div class="p-6 border-b border-zinc-800 flex items-center space-x-3">
-                <div class="bg-pink-600 text-white font-black px-3 py-1.5 rounded-xl text-lg tracking-wider">MF</div>
-                <div>
-                    <h1 class="font-bold text-white tracking-tight text-sm">MARIAN FEM</h1>
-                    <p class="text-[10px] text-pink-500 font-semibold uppercase tracking-wider">Panel Administradora</p>
+            <div class="p-6 border-b border-zinc-800 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-pink-600 text-white font-black px-3 py-1.5 rounded-xl text-lg tracking-wider">MF</div>
+                    <div>
+                        <h1 class="font-bold text-white tracking-tight text-sm">MARIAN FEM</h1>
+                        <p class="text-[10px] text-pink-500 font-semibold uppercase tracking-wider">Panel Administradora</p>
+                    </div>
                 </div>
+                <!-- Botón para cerrar menú en celular -->
+                <button id="btn-cerrar-sidebar" class="md:hidden text-zinc-400 hover:text-white text-base p-1">✕</button>
             </div>
 
             <!-- Navegación con IDs para control de vistas -->
@@ -34,31 +38,38 @@
             </nav>
         </div>
 
-        <!-- Usuario Administrador y Botón de Cerrar Sesión -->
+        <!-- Usuario Administrador y Botón Limpio de Cerrar Sesión -->
         <div class="p-4 border-t border-zinc-800">
-            <div class="flex items-center justify-between bg-zinc-800/50 p-3 rounded-xl">
-                <div class="flex items-center space-x-2 min-w-0">
-                    <span class="bg-pink-600 text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center shrink-0">MF</span>
+            <div class="bg-zinc-800/50 p-3 rounded-xl space-y-3">
+                <div class="flex items-center space-x-2.5 min-w-0">
+                    <span class="bg-pink-600 text-white text-xs font-bold rounded-full w-8 h-8 flex items-center justify-center shrink-0">MF</span>
                     <div class="truncate">
                         <p class="text-xs font-bold text-white truncate">Marian Admin</p>
                         <p class="text-[10px] text-zinc-400 truncate">admin@marianfem.com</p>
                     </div>
                 </div>
-                <button id="btn-cerrar-sesion" class="bg-zinc-800 hover:bg-pink-600/20 text-zinc-400 hover:text-pink-400 p-2 rounded-lg text-xs transition border border-zinc-700 hover:border-pink-500/30 shrink-0" title="Cerrar sesión">🚪</button>
+                <button id="btn-cerrar-sesion" class="w-full bg-zinc-800 hover:bg-pink-600/20 text-zinc-300 hover:text-pink-400 py-2 px-3 rounded-lg text-xs font-semibold transition border border-zinc-700 hover:border-pink-500/30 flex items-center justify-center space-x-2">
+                    <span>🚪</span>
+                    <span>Cerrar sesión</span>
+                </button>
             </div>
         </div>
     </aside>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <div class="flex-1 flex flex-col min-w-0">
+    <!-- CONTENIDO PRINCIPAL (Con margen izquierdo en PC para dejar espacio al sidebar fijo) -->
+    <div class="flex-1 flex flex-col min-w-0 md:ml-72">
         
         <!-- HEADER SUPERIOR -->
         <header class="bg-zinc-900 border-b border-zinc-800 h-16 flex items-center justify-between px-6 sticky top-0 z-40">
-            <div class="flex items-center space-x-4">
-                <h2 class="text-lg font-bold text-white tracking-tight">Control de Actividad y Turnos - Octubre</h2>
+            <div class="flex items-center space-x-3">
+                <!-- Botón Menú Hamburguesa para Celular -->
+                <button id="btn-toggle-sidebar" class="md:hidden text-zinc-300 hover:text-white p-2 rounded-lg bg-zinc-800 text-sm">
+                    ☰
+                </button>
+                <h2 class="text-sm md:text-lg font-bold text-white tracking-tight truncate">Control de Actividad y Turnos</h2>
             </div>
             <div class="flex items-center space-x-3">
-                <span class="text-xs bg-emerald-500/10 text-emerald-400 font-semibold px-3 py-1 rounded-full border border-emerald-500/20">🟢 Supabase Conectado</span>
+                <span class="text-[10px] md:text-xs bg-emerald-500/15 text-emerald-400 font-semibold px-2.5 py-1 rounded-full border border-emerald-500/20">🟢 Supabase</span>
             </div>
         </header>
 
@@ -198,8 +209,6 @@
         </main>
     </div>
 
-    <!-- Script conectado a Supabase -->
-    <script type="module" src="admin-gimnasio.js"></script>
     <!-- MODAL: AGREGAR NUEVA CLASE -->
     <div id="modal-clase" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-md p-6 space-y-6 shadow-2xl">

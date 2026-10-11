@@ -13,7 +13,6 @@ async function verificarSesionAdmin() {
     if (!session) {
         window.location.href = 'admin-login.html'
     } else {
-        // Cargar datos iniciales del panel si hay sesión
         cargarDatosDashboard()
     }
 }
@@ -36,15 +35,12 @@ const viewDashboard = document.getElementById('view-dashboard')
 const viewRegistrar = document.getElementById('view-registrar')
 
 function cambiarVista(vistaActiva) {
-    // Ocultar todas las vistas
     if (viewDashboard) viewDashboard.classList.add('hidden')
     if (viewRegistrar) viewRegistrar.classList.add('hidden')
 
-    // Quitar estilos activos de los botones
     if (navDashboard) navDashboard.className = "flex items-center space-x-3 px-4 py-2.5 rounded-xl hover:bg-zinc-800 text-zinc-300 transition"
     if (navRegistrar) navRegistrar.className = "flex items-center space-x-3 px-4 py-2.5 rounded-xl hover:bg-zinc-800 text-zinc-300 transition"
 
-    // Mostrar la vista seleccionada y activar su botón
     if (vistaActiva === 'dashboard') {
         if (viewDashboard) viewDashboard.classList.remove('hidden')
         if (navDashboard) navDashboard.className = "flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-pink-600/10 text-pink-400 border border-pink-500/20 font-semibold transition"
@@ -156,7 +152,6 @@ function actualizarContadorTurnosHoy(clases) {
 
 async function cargarMetricasClientas() {
     try {
-        // Consultar la tabla de clientas en Supabase (ej: 'gimnasio_clientas')
         const { data: clientas, error } = await supabase
             .from('gimnasio_clientas')
             .select('*')
@@ -171,7 +166,6 @@ async function cargarMetricasClientas() {
         let cantPro = clientas.filter(c => c.plan === 'pro').length
         let gananciaTotal = (cantBase * 30) + (cantPro * 50)
 
-        // Actualizar UI de métricas
         document.getElementById('total-clientas-activas').textContent = activas
         document.getElementById('ganancia-estimada').textContent = `$ ${gananciaTotal} USD`
         document.getElementById('cant-base').textContent = cantBase
@@ -182,7 +176,7 @@ async function cargarMetricasClientas() {
     }
 }
 
-// 5. REGISTRO DE NUEVA CLIENTA DESDE EL FORMULARIO ADMIN
+// 5. REGISTRO DE NUEVA CLIENTA
 const formRegistrar = document.getElementById('form-registrar-clienta')
 if (formRegistrar) {
     formRegistrar.addEventListener('submit', async (e) => {
@@ -197,7 +191,6 @@ if (formRegistrar) {
         const ficha = document.getElementById('reg-ficha').value
 
         try {
-            // 1. Crear el usuario en Supabase Auth
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: email,
                 password: password,
@@ -205,7 +198,6 @@ if (formRegistrar) {
 
             if (authError) throw authError
 
-            // 2. Guardar los datos extendidos y la ficha médica en la tabla de clientas
             const { error: dbError } = await supabase
                 .from('gimnasio_clientas')
                 .insert([
@@ -222,7 +214,7 @@ if (formRegistrar) {
 
             if (dbError) throw dbError
 
-            alert(`¡Clienta ${nombre} registrada con éxito! Credenciales listas para pasar por WhatsApp.`)
+            alert(`¡Clienta ${nombre} registrada con éxito!`)
             formRegistrar.reset()
             cambiarVista('dashboard')
             cargarMetricasClientas()
@@ -233,6 +225,7 @@ if (formRegistrar) {
         }
     })
 }
+
 // 6. CONTROL DEL MODAL PARA AGREGAR CLASES
 const modalClase = document.getElementById('modal-clase')
 const btnAbrirModal = document.getElementById('btn-abrir-modal-clase')
@@ -282,7 +275,7 @@ if (formCrearClase) {
 
             alert("¡Clase agregada con éxito al cronograma!")
             cerrarModalClase()
-            cargarClasesSupabase() // Recargar la tabla y métricas en vivo
+            cargarClasesSupabase()
 
         } catch (err) {
             alert("Error al guardar la clase: " + err.message)
@@ -290,3 +283,29 @@ if (formCrearClase) {
         }
     })
 }
+
+// 7. CONTROL DEL MENÚ RESPONSIVE EN CELULARES
+const sidebarMovil = document.getElementById('sidebar-movil')
+const btnToggleSidebar = document.getElementById('btn-toggle-sidebar')
+const btnCerrarSidebar = document.getElementById('btn-cerrar-sidebar')
+
+if (btnToggleSidebar && sidebarMovil) {
+    btnToggleSidebar.addEventListener('click', () => {
+        sidebarMovil.classList.toggle('-translate-x-full')
+    })
+}
+
+if (btnCerrarSidebar && sidebarMovil) {
+    btnCerrarSidebar.addEventListener('click', () => {
+        sidebarMovil.classList.add('-translate-x-full')
+    })
+}
+
+const navLinks = document.querySelectorAll('aside nav a')
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth < 768 && sidebarMovil) {
+            sidebarMovil.classList.add('-translate-x-full')
+        }
+    })
+})
