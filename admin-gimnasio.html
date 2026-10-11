@@ -10,7 +10,7 @@
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex">
 
-    <!-- MENÚ LATERAL / SIDEBAR -->
+    <!-- MENÚ LATERAL / SIDEBAR (Sin Horarios y Turnos) -->
     <aside id="sidebar-movil" class="fixed inset-y-0 left-0 z-50 w-72 bg-zinc-900 border-r border-zinc-800 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col justify-between shadow-2xl">
         <div>
             <!-- Logo / Título Marian Fem -->
@@ -29,7 +29,6 @@
             <!-- Navegación con IDs para control de vistas -->
             <nav class="p-4 space-y-1.5 text-xs font-medium">
                 <a href="#" id="nav-dashboard" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-pink-600/10 text-pink-400 border border-pink-500/20 font-semibold transition"><span>📊</span> <span>Dashboard General</span></a>
-                <a href="#" id="nav-horarios" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl hover:bg-zinc-800 text-zinc-300 transition"><span>📅</span> <span>Horarios y Turnos</span></a>
                 <a href="#" id="nav-clientas" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl hover:bg-zinc-800 text-zinc-300 transition"><span>👥</span> <span>Buscador y Fichas Clientas</span></a>
                 <a href="#" id="nav-registrar" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl hover:bg-zinc-800 text-zinc-300 transition"><span>➕</span> <span>Registrar Nueva Clienta</span></a>
                 <a href="#" id="nav-promos" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl hover:bg-zinc-800 text-zinc-300 transition"><span>📢</span> <span>Publicar Promos / Avisos</span></a>
@@ -56,7 +55,7 @@
         </div>
     </aside>
 
-    <!-- CONTENIDO PRINCIPAL (Con margen izquierdo en PC para dejar espacio al sidebar fijo) -->
+    <!-- CONTENIDO PRINCIPAL -->
     <div class="flex-1 flex flex-col min-w-0 md:ml-72">
         
         <!-- HEADER SUPERIOR -->
@@ -76,7 +75,7 @@
         <!-- CONTENEDOR DE VISTAS DINÁMICAS -->
         <main class="p-6 space-y-6 overflow-y-auto">
             
-            <!-- VISTA 1: DASHBOARD GENERAL (Visible por defecto) -->
+            <!-- VISTA 1: DASHBOARD GENERAL (Incluye Métricas, Acordeón de Calendario y Tabla de Turnos) -->
             <div id="view-dashboard" class="space-y-6">
                 <!-- Métricas -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -113,6 +112,50 @@
                     </div>
                 </div>
 
+                <!-- ACORDEÓN DESPLEGABLE: CALENDARIO MENSUAL DE TURNOS -->
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-sm overflow-hidden">
+                    <!-- Cabecera Clickera del Acordeón -->
+                    <button id="btn-toggle-acordeon" class="w-full p-5 flex items-center justify-between text-left hover:bg-zinc-800/50 transition">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="text-base">📅</span>
+                            <span class="font-bold text-white text-sm md:text-base">Ver Calendario Mensual de Turnos</span>
+                        </div>
+                        <span id="icono-flecha" class="text-pink-400 font-bold text-sm transition-transform duration-300">▼</span>
+                    </button>
+
+                    <!-- Contenido Desplegable del Calendario -->
+                    <div id="contenido-acordeon-calendario" class="hidden p-6 border-t border-zinc-800 space-y-6">
+                        <!-- Barra de Controles del Calendario -->
+                        <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-zinc-800 pb-4">
+                            <div class="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
+                                <button id="btn-mes-anterior" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold px-4 py-2 rounded-xl transition border border-zinc-700">◀ Mes Ant.</button>
+                                <h3 class="font-bold text-white text-base" id="label-mes-anio">Octubre 2026</h3>
+                                <button id="btn-mes-siguiente" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold px-4 py-2 rounded-xl transition border border-zinc-700">Mes Sig. ▶</button>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <button id="btn-marcar-feriado" class="bg-zinc-800 hover:bg-pink-600/20 text-pink-400 text-xs font-semibold px-4 py-2 rounded-xl transition border border-zinc-700 hover:border-pink-500/30">
+                                    🔒 Marcar Día Feriado / Cerrado
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Contenedor Responsive con scroll horizontal para celulares -->
+                        <div class="overflow-x-auto pb-2">
+                            <div class="min-w-[650px] space-y-2">
+                                <!-- Días de la semana -->
+                                <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold text-zinc-400 uppercase">
+                                    <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+                                </div>
+
+                                <!-- Grilla del Calendario Mensual -->
+                                <div class="grid grid-cols-7 gap-2" id="grilla-calendario-mes">
+                                    <!-- Los días se generan dinámicamente con JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Tabla de Turnos -->
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-4 shadow-sm">
                     <div class="flex justify-between items-center">
@@ -127,7 +170,7 @@
                         <table class="min-w-full text-sm divide-y divide-zinc-800">
                             <thead>
                                 <tr class="text-left text-xs font-bold text-zinc-500 uppercase">
-                                    <th class="py-3 px-3">Horario</th>
+                                    <th class="py-3 px-3">Fecha / Horario</th>
                                     <th class="py-3 px-3">Disciplina / Tipo</th>
                                     <th class="py-3 px-3">Cupos / Estado</th>
                                     <th class="py-3 px-3 text-right">Acciones Admin</th>
@@ -136,7 +179,7 @@
                             <tbody class="divide-y divide-zinc-800 text-zinc-300 font-medium" id="tabla-turnos-gimnasio">
                                 <tr>
                                     <td colspan="4" class="py-8 text-center text-xs text-zinc-500 italic">
-                                        Cargando cronograma o sin clases registradas para hoy...
+                                        Cargando cronograma o sin clases registradas...
                                     </td>
                                 </tr>
                             </tbody>
@@ -145,7 +188,7 @@
                 </div>
             </div>
 
-            <!-- VISTA 2: REGISTRAR NUEVA CLIENTA (Oculta por defecto con 'hidden') -->
+            <!-- VISTA 2: REGISTRAR NUEVA CLIENTA (Oculta por defecto) -->
             <div id="view-registrar" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-6 shadow-sm hidden">
                 <div class="border-b border-zinc-800 pb-4">
                     <h3 class="font-bold text-white text-base">Registrar Nueva Clienta y Ficha Médica</h3>
@@ -191,7 +234,6 @@
                             class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-pink-500 transition">
                     </div>
 
-                    <!-- Ficha Médica Básica Integrada -->
                     <div class="md:col-span-2 space-y-1.5 pt-2 border-t border-zinc-800">
                         <label class="text-xs font-semibold text-pink-400 uppercase tracking-wider">Ficha Médica / Observaciones Físicas</label>
                         <textarea id="reg-ficha" rows="2" placeholder="Ej: Apto físico al día. Lesión leve en rodilla derecha. Sin restricciones mayores."
@@ -218,6 +260,12 @@
             </div>
 
             <form id="form-crear-clase" class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold text-zinc-300">Fecha de la Clase</label>
+                    <input type="date" id="clase-fecha" required
+                        class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
+                </div>
+
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold text-zinc-300">Horario</label>
                     <input type="text" id="clase-horario" placeholder="Ej: 08:00 o 18:10" required
@@ -253,5 +301,29 @@
             </form>
         </div>
     </div>
+
+    <!-- MODAL: FICHA DE LA CLIENTA -->
+    <div id="modal-detalle-turno" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-lg p-6 space-y-6 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
+                <div>
+                    <h3 class="font-bold text-white text-base" id="modal-turno-titulo">Detalle del Turno y Alumnas</h3>
+                    <p class="text-xs text-zinc-400">Asistentes confirmadas y ficha médica</p>
+                </div>
+                <button id="btn-cerrar-modal-detalle" class="text-zinc-400 hover:text-white text-sm font-bold">✕</button>
+            </div>
+
+            <div class="space-y-3 max-h-60 overflow-y-auto" id="lista-alumnas-turno">
+                <div class="text-center text-xs text-zinc-500 py-4">Cargando asistentes...</div>
+            </div>
+
+            <div class="pt-2 flex justify-end">
+                <button type="button" id="btn-cerrar-detalle-footer" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold px-4 py-2.5 rounded-xl text-xs transition">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
