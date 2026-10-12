@@ -28,7 +28,7 @@ if (btnCerrarSesion) {
     })
 }
 
-// 3. CONTROL DE VISTAS (Pestañas del Menú Lateral Actualizadas)
+// 3. CONTROL DE VISTAS (Pestañas del Menú Lateral)
 const navDashboard = document.getElementById('nav-dashboard')
 const navRegistrar = document.getElementById('nav-registrar')
 const viewDashboard = document.getElementById('view-dashboard')
@@ -116,12 +116,21 @@ function renderizarTablaTurnos(clases) {
         tdCupos.appendChild(span)
 
         const tdAccion = document.createElement('td')
-        tdAccion.className = "py-3 px-3 text-right"
+        tdAccion.className = "py-3 px-3 text-right space-x-2"
+        
+        // Botón Ver Asistencia
         const btn = document.createElement('button')
         btn.className = "text-xs bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg text-zinc-200 font-semibold transition"
         btn.textContent = "Ver Asistencia"
         btn.onclick = () => abrirDetalleTurno(clase.id, clase.nombre, clase.horario)
         tdAccion.appendChild(btn)
+
+        // Botón Eliminar Clase
+        const btnEliminar = document.createElement('button')
+        btnEliminar.className = "text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-lg font-semibold transition"
+        btnEliminar.textContent = "🗑️ Eliminar"
+        btnEliminar.onclick = () => eliminarClaseSupabase(clase.id, clase.nombre, clase.fecha)
+        tdAccion.appendChild(btnEliminar)
 
         tr.appendChild(tdFechaHora)
         tr.appendChild(tdDisc)
@@ -130,6 +139,28 @@ function renderizarTablaTurnos(clases) {
 
         tablaTurnos.appendChild(tr)
     })
+}
+
+// Función auxiliar para eliminar la clase en Supabase
+async function eliminarClaseSupabase(idClase, nombreClase, fechaClase) {
+    const confirmar = confirm(`¿Estás segura de que deseas eliminar la clase de "${nombreClase}" del día ${fechaClase}?`)
+    if (!confirmar) return
+
+    try {
+        const { error } = await supabase
+            .from('gimnasio_clases')
+            .delete()
+            .eq('id', idClase)
+
+        if (error) throw error
+
+        alert("¡Clase eliminada con éxito!")
+        cargarClasesSupabase()
+        renderizarCalendarioMensual()
+    } catch (err) {
+        alert("Error al eliminar la clase: " + err.message)
+        console.error(err)
+    }
 }
 
 function actualizarContadorTurnosHoy(clases) {
@@ -271,7 +302,7 @@ document.querySelectorAll('aside nav a').forEach(link => {
     link.addEventListener('click', () => { if (window.innerWidth < 768 && sidebarMovil) sidebarMovil.classList.add('-translate-x-full') })
 })
 
-// 9. CALENDARIO MENSUAL DINÁMICO CON CLASES DE SUPABASE
+// 9. CALENDARIO MENSUAL DINÁMICO CON CLASES Y FERIADOS DE SUPABASE
 let mesActualIndex = new Date().getMonth()
 let anioActual = new Date().getFullYear()
 
@@ -305,9 +336,21 @@ if (btnMesSiguiente) {
 }
 
 if (btnMarcarFeriado) {
-    btnMarcarFeriado.addEventListener('click', () => {
-        const fechaFeriado = prompt("Ingresa la fecha que deseas marcar como Feriado / Cerrado (YYYY-MM-DD):")
-        if (fechaFeriado) alert(`¡Día ${fechaFeriado} marcado como Cerrado / Feriado con éxito!`)
+    btnMarcarFeriado.addEventListener('click', async () => {
+        const fechaFeriado = prompt("Ingresa la fecha a marcar como Feriado / Cerrado (YYYY-MM-DD):")
+        if (!fechaFeriado) return
+
+        const motivo = prompt("Motivo del cierre (ej: Feriado Nacional):") || "Cerrado"
+
+        try {
+            const { error } = await supabase.from('gimnasio_feriados').insert([{ fecha: fechaFeriado, motivo: motivo }])
+            if (error) throw error
+
+            alert(`¡Día ${fechaFeriado} marcado como Feriado en Supabase!`)
+            renderizarCalendarioMensual()
+        } catch (err) {
+            alert("Error al guardar feriado: " + err.message)
+        }
     })
 }
 
@@ -321,9 +364,13 @@ async function renderizarCalendarioMensual() {
     const totalDiasMes = new Date(anioActual, mesActualIndex + 1, 0).getDate()
 
     let clasesMes = []
+    let feriadosMes = []
     try {
-        const { data } = await supabase.from('gimnasio_clases').select('*').order('horario', { ascending: true })
-        if (data) clasesMes = data
+        const resClases = await supabase.from('gimnasio_clases').select('*').order('horario', { ascending: true })
+        if (resClases.data) clasesMes = resClases.data
+
+        const resFeriados = await supabase.from('gimnasio_feriados').select('*')
+        if (resFeriados.data) feriadosMes = resFeriados.data
     } catch (e) { console.error(e) }
 
     for (let i = 0; i < desplazamiento; i++) {
@@ -333,30 +380,54 @@ async function renderizarCalendarioMensual() {
     }
 
     for (let dia = 1; dia <= totalDiasMes; dia++) {
-        const celda = document.createElement('div')
-        celda.className = "h-28 bg-zinc-950 border border-zinc-800 rounded-xl p-2 flex flex-col justify-between overflow-y-auto hover:border-zinc-700 transition"
-
-        const numeroDia = document.createElement('div')
-        numeroDia.className = "text-xs font-bold text-zinc-400"
-        numeroDia.textContent = dia
-        celda.appendChild(numeroDia)
-
-        const contenedorClases = document.createElement('div')
-        contenedorClases.className = "space-y-1 mt-1"
-
         const mesStr = String(mesActualIndex + 1).padStart(2, '0')
         const diaStr = String(dia).padStart(2, '0')
         const fechaCelda = `${anioActual}-${mesStr}-${diaStr}`
 
-        const clasesDelDia = clasesMes.filter(c => c.fecha === fechaCelda)
+        const feriadoHoy = feriadosMes.find(f => f.fecha === fechaCelda)
 
-        clasesDelDia.forEach(clase => {
-            const badgeClase = document.createElement('button')
-            badgeClase.className = "w-full text-left bg-pink-950/60 hover:bg-pink-900/80 border border-pink-500/30 text-pink-200 text-[10px] px-2 py-1 rounded-lg truncate font-semibold transition"
-            badgeClase.textContent = `${clase.horario} ${clase.nombre.toLowerCase()}`
-            badgeClase.onclick = () => abrirDetalleTurno(clase.id, clase.nombre, clase.horario)
-            contenedorClases.appendChild(badgeClase)
-        })
+        const celda = document.createElement('div')
+        if (feriadoHoy) {
+            celda.className = "h-28 bg-red-950/40 border border-red-500/40 rounded-xl p-2 flex flex-col justify-between overflow-y-auto"
+        } else {
+            celda.className = "h-28 bg-zinc-950 border border-zinc-800 rounded-xl p-2 flex flex-col justify-between overflow-y-auto hover:border-zinc-700 transition"
+        }
+
+        const headerCelda = document.createElement('div')
+        headerCelda.className = "flex justify-between items-center"
+
+        const numeroDia = document.createElement('span')
+        numeroDia.className = "text-xs font-bold text-zinc-400"
+        numeroDia.textContent = dia
+        headerCelda.appendChild(numeroDia)
+
+        if (feriadoHoy) {
+            const badgeFeriado = document.createElement('span')
+            badgeFeriado.className = "text-[9px] bg-red-500/20 text-red-400 font-bold px-1.5 py-0.5 rounded border border-red-500/30 uppercase truncate"
+            badgeFeriado.textContent = feriadoHoy.motivo || 'Cerrado'
+            headerCelda.appendChild(badgeFeriado)
+        }
+
+        celda.appendChild(headerCelda)
+
+        const contenedorClases = document.createElement('div')
+        contenedorClases.className = "space-y-1 mt-1"
+
+        if (!feriadoHoy) {
+            const clasesDelDia = clasesMes.filter(c => c.fecha === fechaCelda)
+            clasesDelDia.forEach(clase => {
+                const badgeClase = document.createElement('button')
+                badgeClase.className = "w-full text-left bg-pink-950/60 hover:bg-pink-900/80 border border-pink-500/30 text-pink-200 text-[10px] px-2 py-1 rounded-lg truncate font-semibold transition"
+                badgeClase.textContent = `${clase.horario} ${clase.nombre.toLowerCase()}`
+                badgeClase.onclick = () => abrirDetalleTurno(clase.id, clase.nombre, clase.horario)
+                contenedorClases.appendChild(badgeClase)
+            })
+        } else {
+            const avisoCerrado = document.createElement('div')
+            avisoCerrado.className = "text-[10px] text-red-400 italic text-center pt-3 font-semibold"
+            avisoCerrado.textContent = "🔒 Día no laborable"
+            contenedorClases.appendChild(avisoCerrado)
+        }
 
         celda.appendChild(contenedorClases)
         grillaCalendarioMes.appendChild(celda)
@@ -369,18 +440,33 @@ window.abrirDetalleTurno = async function(claseId, nombreClase, horarioClase) {
     document.getElementById('modal-turno-titulo').textContent = `${nombreClase} (${horarioClase} hs)`
     
     if (listaAlumnasTurno) {
-        listaAlumnasTurno.innerHTML = `<div class="text-center text-xs text-zinc-500 py-4">Buscando tarjeta de clientas y ficha médica...</div>`
+        listaAlumnasTurno.innerHTML = `<div class="text-center text-xs text-zinc-500 py-4">Buscando alumnas anotadas...</div>`
         
         try {
-            const { data: clientas } = await supabase.from('gimnasio_clientas').select('*')
+            // 1. Buscar las reservas de esta clase
+            const { data: reservas, error: errReserva } = await supabase
+                .from('gimnasio_reservas')
+                .select('*')
+                .eq('clase_id', claseId)
 
-            if (!clientas || clientas.length === 0) {
-                listaAlumnasTurno.innerHTML = `<div class="text-center text-xs text-zinc-500 py-4">No hay clientas registradas todavía en el sistema.</div>`
+            if (errReserva) throw errReserva
+
+            if (!reservas || reservas.length === 0) {
+                listaAlumnasTurno.innerHTML = `<div class="text-center text-xs text-zinc-500 py-4 italic">No hay alumnas anotadas en esta clase todavía.</div>`
                 return
             }
 
+            // 2. Obtener los datos de las clientas para esas reservas
             listaAlumnasTurno.innerHTML = ""
-            clientas.forEach(clienta => {
+            for (const reserva of reservas) {
+                const { data: clienta } = await supabase
+                    .from('gimnasio_clientas')
+                    .select('*')
+                    .eq('id', reserva.clienta_id)
+                    .single()
+
+                if (!clienta) continue
+
                 const tarjetaClienta = document.createElement('div')
                 tarjetaClienta.className = "bg-zinc-950 border border-zinc-800 p-3.5 rounded-xl space-y-2 text-xs"
                 tarjetaClienta.innerHTML = `
@@ -401,10 +487,11 @@ window.abrirDetalleTurno = async function(claseId, nombreClase, horarioClase) {
                     </div>
                 `
                 listaAlumnasTurno.appendChild(tarjetaClienta)
-            })
+            }
 
         } catch (e) {
-            listaAlumnasTurno.innerHTML = `<div class="text-center text-xs text-red-400">Error al cargar la tarjeta de la clienta.</div>`
+            console.error(e)
+            listaAlumnasTurno.innerHTML = `<div class="text-center text-xs text-red-400">Error al cargar las asistentes.</div>`
         }
     }
 }

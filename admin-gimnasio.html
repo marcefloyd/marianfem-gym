@@ -10,7 +10,7 @@
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex">
 
-    <!-- MENÚ LATERAL / SIDEBAR (Sin Horarios y Turnos) -->
+    <!-- MENÚ LATERAL / SIDEBAR -->
     <aside id="sidebar-movil" class="fixed inset-y-0 left-0 z-50 w-72 bg-zinc-900 border-r border-zinc-800 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col justify-between shadow-2xl">
         <div>
             <!-- Logo / Título Marian Fem -->
@@ -75,7 +75,7 @@
         <!-- CONTENEDOR DE VISTAS DINÁMICAS -->
         <main class="p-6 space-y-6 overflow-y-auto">
             
-            <!-- VISTA 1: DASHBOARD GENERAL (Incluye Métricas, Acordeón de Calendario y Tabla de Turnos) -->
+            <!-- VISTA 1: DASHBOARD GENERAL -->
             <div id="view-dashboard" class="space-y-6">
                 <!-- Métricas -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -114,7 +114,6 @@
 
                 <!-- ACORDEÓN DESPLEGABLE: CALENDARIO MENSUAL DE TURNOS -->
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-sm overflow-hidden">
-                    <!-- Cabecera Clickera del Acordeón -->
                     <button id="btn-toggle-acordeon" class="w-full p-5 flex items-center justify-between text-left hover:bg-zinc-800/50 transition">
                         <div class="flex items-center space-x-2.5">
                             <span class="text-base">📅</span>
@@ -123,9 +122,7 @@
                         <span id="icono-flecha" class="text-pink-400 font-bold text-sm transition-transform duration-300">▼</span>
                     </button>
 
-                    <!-- Contenido Desplegable del Calendario -->
                     <div id="contenido-acordeon-calendario" class="hidden p-6 border-t border-zinc-800 space-y-6">
-                        <!-- Barra de Controles del Calendario -->
                         <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-zinc-800 pb-4">
                             <div class="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
                                 <button id="btn-mes-anterior" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold px-4 py-2 rounded-xl transition border border-zinc-700">◀ Mes Ant.</button>
@@ -139,18 +136,12 @@
                             </div>
                         </div>
 
-                        <!-- Contenedor Responsive con scroll horizontal para celulares -->
                         <div class="overflow-x-auto pb-2">
                             <div class="min-w-[650px] space-y-2">
-                                <!-- Días de la semana -->
                                 <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold text-zinc-400 uppercase">
                                     <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
                                 </div>
-
-                                <!-- Grilla del Calendario Mensual -->
-                                <div class="grid grid-cols-7 gap-2" id="grilla-calendario-mes">
-                                    <!-- Los días se generan dinámicamente con JavaScript -->
-                                </div>
+                                <div class="grid grid-cols-7 gap-2" id="grilla-calendario-mes"></div>
                             </div>
                         </div>
                     </div>
@@ -188,7 +179,7 @@
                 </div>
             </div>
 
-            <!-- VISTA 2: REGISTRAR NUEVA CLIENTA (Oculta por defecto) -->
+            <!-- VISTA 2: REGISTRAR NUEVA CLIENTA -->
             <div id="view-registrar" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-6 shadow-sm hidden">
                 <div class="border-b border-zinc-800 pb-4">
                     <h3 class="font-bold text-white text-base">Registrar Nueva Clienta y Ficha Médica</h3>
@@ -236,7 +227,7 @@
 
                     <div class="md:col-span-2 space-y-1.5 pt-2 border-t border-zinc-800">
                         <label class="text-xs font-semibold text-pink-400 uppercase tracking-wider">Ficha Médica / Observaciones Físicas</label>
-                        <textarea id="reg-ficha" rows="2" placeholder="Ej: Apto físico al día. Lesión leve en rodilla derecha. Sin restricciones mayores."
+                        <textarea id="reg-ficha" rows="2" placeholder="Ej: Apto físico al día. Lesión leve en rodilla derecha."
                             class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-pink-500 transition"></textarea>
                     </div>
 
