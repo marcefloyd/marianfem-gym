@@ -22,22 +22,20 @@
                         <p class="text-[10px] text-pink-500 font-semibold uppercase tracking-wider">Panel Administradora</p>
                     </div>
                 </div>
-                <!-- Botón para cerrar menú en celular -->
                 <button id="btn-cerrar-sidebar" class="md:hidden text-zinc-400 hover:text-white text-base p-1">✕</button>
             </div>
 
-            <!-- Navegación con IDs para control de vistas -->
+            <!-- Navegación optimizada (Sin Difusión masiva redundante) -->
             <nav class="p-4 space-y-1.5 text-xs font-medium">
                 <a href="#" id="nav-dashboard" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-pink-600/10 text-pink-400 border border-pink-500/20 font-semibold transition"><span>📊</span> <span>Dashboard General</span></a>
                 <a href="#" id="nav-clientas" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl hover:bg-zinc-800 text-zinc-300 transition"><span>👥</span> <span>Buscador y Fichas Clientas</span></a>
                 <a href="#" id="nav-registrar" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl hover:bg-zinc-800 text-zinc-300 transition"><span>➕</span> <span>Registrar Nueva Clienta</span></a>
                 <a href="#" id="nav-promos" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl hover:bg-zinc-800 text-zinc-300 transition"><span>📢</span> <span>Publicar Promos / Avisos</span></a>
-                <a href="#" id="nav-whatsapp" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl hover:bg-zinc-800 text-zinc-300 transition"><span>💬</span> <span>Difusión WhatsApp</span></a>
                 <a href="#" id="nav-planes" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl hover:bg-zinc-800 text-zinc-300 transition"><span>🏷️</span> <span>Planes y Tarifas</span></a>
             </nav>
         </div>
 
-        <!-- Usuario Administrador y Botón Limpio de Cerrar Sesión -->
+        <!-- Usuario Administrador y Cierre de Sesión -->
         <div class="p-4 border-t border-zinc-800">
             <div class="bg-zinc-800/50 p-3 rounded-xl space-y-3">
                 <div class="flex items-center space-x-2.5 min-w-0">
@@ -61,10 +59,7 @@
         <!-- HEADER SUPERIOR -->
         <header class="bg-zinc-900 border-b border-zinc-800 h-16 flex items-center justify-between px-6 sticky top-0 z-40">
             <div class="flex items-center space-x-3">
-                <!-- Botón Menú Hamburguesa para Celular -->
-                <button id="btn-toggle-sidebar" class="md:hidden text-zinc-300 hover:text-white p-2 rounded-lg bg-zinc-800 text-sm">
-                    ☰
-                </button>
+                <button id="btn-toggle-sidebar" class="md:hidden text-zinc-300 hover:text-white p-2 rounded-lg bg-zinc-800 text-sm">☰</button>
                 <h2 class="text-sm md:text-lg font-bold text-white tracking-tight truncate">Control de Actividad y Turnos</h2>
             </div>
             <div class="flex items-center space-x-3">
@@ -112,7 +107,7 @@
                     </div>
                 </div>
 
-                <!-- ACORDEÓN DESPLEGABLE: CALENDARIO MENSUAL DE TURNOS -->
+                <!-- ACORDEÓN: CALENDARIO MENSUAL -->
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-sm overflow-hidden">
                     <button id="btn-toggle-acordeon" class="w-full p-5 flex items-center justify-between text-left hover:bg-zinc-800/50 transition">
                         <div class="flex items-center space-x-2.5">
@@ -169,9 +164,7 @@
                             </thead>
                             <tbody class="divide-y divide-zinc-800 text-zinc-300 font-medium" id="tabla-turnos-gimnasio">
                                 <tr>
-                                    <td colspan="4" class="py-8 text-center text-xs text-zinc-500 italic">
-                                        Cargando cronograma o sin clases registradas...
-                                    </td>
+                                    <td colspan="4" class="py-8 text-center text-xs text-zinc-500 italic">Cargando cronograma...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -179,7 +172,35 @@
                 </div>
             </div>
 
-            <!-- VISTA 2: REGISTRAR NUEVA CLIENTA -->
+            <!-- VISTA 2: BUSCADOR Y FICHAS DE CLIENTAS -->
+            <div id="view-clientas" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-6 shadow-sm hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-zinc-800 pb-4">
+                    <div>
+                        <h3 class="font-bold text-white text-base">Buscador y Fichas de Clientas</h3>
+                        <p class="text-xs text-zinc-400">Busca por nombre, DNI o teléfono para ver fichas, historial y notas de evolución</p>
+                    </div>
+                    <div class="w-full md:w-72">
+                        <input type="text" id="input-buscar-clienta" placeholder="🔍 Buscar por nombre, DNI..." 
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-pink-500 transition">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Lista de resultados -->
+                    <div class="lg:col-span-1 space-y-2.5 max-h-[500px] overflow-y-auto pr-1" id="contenedor-lista-busqueda">
+                        <p class="text-xs text-zinc-500 italic text-center py-6">Escribe en el buscador o selecciona una clienta.</p>
+                    </div>
+
+                    <!-- Detalle de la Ficha Seleccionada -->
+                    <div class="lg:col-span-2 bg-zinc-950 border border-zinc-800 rounded-2xl p-5 space-y-5" id="panel-ficha-detalle">
+                        <div class="text-center py-16 text-zinc-500 text-xs italic">
+                            Selecciona una clienta de la izquierda para ver su perfil completo, notas y asistencia.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA 3: REGISTRAR NUEVA CLIENTA -->
             <div id="view-registrar" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-6 shadow-sm hidden">
                 <div class="border-b border-zinc-800 pb-4">
                     <h3 class="font-bold text-white text-base">Registrar Nueva Clienta y Ficha Médica</h3>
@@ -242,7 +263,7 @@
         </main>
     </div>
 
-    <!-- MODAL: AGREGAR NUEVA CLASE -->
+    <!-- MODAL: AGREGAR CLASE -->
     <div id="modal-clase" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-md p-6 space-y-6 shadow-2xl">
             <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
@@ -253,65 +274,60 @@
             <form id="form-crear-clase" class="space-y-4">
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold text-zinc-300">Fecha de la Clase</label>
-                    <input type="date" id="clase-fecha" required
-                        class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
+                    <input type="date" id="clase-fecha" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
                 </div>
-
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold text-zinc-300">Horario</label>
-                    <input type="text" id="clase-horario" placeholder="Ej: 08:00 o 18:10" required
-                        class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-pink-500 transition">
+                    <input type="text" id="clase-horario" placeholder="Ej: 08:00 o 18:10" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
                 </div>
-
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold text-zinc-300">Nombre de la Disciplina</label>
-                    <input type="text" id="clase-nombre" placeholder="Ej: FUNCIONAL o MF INTENSO" required
-                        class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-pink-500 transition">
+                    <input type="text" id="clase-nombre" placeholder="Ej: FUNCIONAL o MF INTENSO" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
                 </div>
-
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold text-zinc-300">Categoría / Turno</label>
-                    <input type="text" id="clase-categoria" placeholder="Ej: Turno Mañana / Turno Tarde" required
-                        class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-pink-500 transition">
+                    <input type="text" id="clase-categoria" placeholder="Ej: Turno Mañana / Turno Tarde" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
                 </div>
-
                 <div class="space-y-1.5">
                     <label class="text-xs font-semibold text-zinc-300">Cupos Totales</label>
-                    <input type="number" id="clase-totales" value="10" min="1" required
-                        class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
+                    <input type="number" id="clase-totales" value="10" min="1" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
                 </div>
-
                 <div class="pt-2 flex justify-end space-x-3">
-                    <button type="button" id="btn-cancelar-modal" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold px-4 py-2.5 rounded-xl text-xs transition">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="bg-pink-600 hover:bg-pink-500 text-white font-semibold px-5 py-2.5 rounded-xl text-xs transition shadow-sm">
-                        Guardar Clase
-                    </button>
+                    <button type="button" id="btn-cancelar-modal" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold px-4 py-2.5 rounded-xl text-xs transition">Cancelar</button>
+                    <button type="submit" class="bg-pink-600 hover:bg-pink-500 text-white font-semibold px-5 py-2.5 rounded-xl text-xs transition shadow-sm">Guardar Clase</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: FICHA DE LA CLIENTA -->
+    <!-- MODAL: ASISTENCIA A CLASE Y AVISO RÁPIDO WHATSAPP -->
     <div id="modal-detalle-turno" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-lg p-6 space-y-6 shadow-2xl">
             <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
                 <div>
                     <h3 class="font-bold text-white text-base" id="modal-turno-titulo">Detalle del Turno y Alumnas</h3>
-                    <p class="text-xs text-zinc-400">Asistentes confirmadas y ficha médica</p>
+                    <p class="text-xs text-zinc-400">Asistentes confirmadas y alertas rápidas</p>
                 </div>
                 <button id="btn-cerrar-modal-detalle" class="text-zinc-400 hover:text-white text-sm font-bold">✕</button>
             </div>
 
-            <div class="space-y-3 max-h-60 overflow-y-auto" id="lista-alumnas-turno">
+            <!-- Sección de Aviso Rápido al Grupo de esta Clase -->
+            <div class="bg-zinc-950 border border-zinc-800 p-3.5 rounded-xl space-y-2">
+                <label class="text-xs font-semibold text-pink-400 uppercase tracking-wider block">📢 Enviar Aviso Rápido a este Grupo</label>
+                <textarea id="input-aviso-grupo" rows="2" placeholder="Ej: Hola chicas, la clase de hoy se pasa 15 min más tarde por imprevisto..." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-pink-500 transition"></textarea>
+                <div class="flex justify-end">
+                    <button id="btn-enviar-aviso-grupo" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-3 py-1.5 rounded-lg text-xs transition flex items-center space-x-1.5">
+                        <span>💬</span><span>Contactar Inscriptas por WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="space-y-3 max-h-48 overflow-y-auto" id="lista-alumnas-turno">
                 <div class="text-center text-xs text-zinc-500 py-4">Cargando asistentes...</div>
             </div>
 
             <div class="pt-2 flex justify-end">
-                <button type="button" id="btn-cerrar-detalle-footer" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold px-4 py-2.5 rounded-xl text-xs transition">
-                    Cerrar
-                </button>
+                <button type="button" id="btn-cerrar-detalle-footer" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold px-4 py-2.5 rounded-xl text-xs transition">Cerrar</button>
             </div>
         </div>
     </div>
